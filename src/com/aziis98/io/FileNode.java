@@ -1,100 +1,47 @@
 package com.aziis98.io;
 
-public class FileNode {
+import com.aziis98.strings.*;
 
-    public static String DEFAULT_SEPARATOR = "/";
+public class FileNode extends AbstractNode {
 
-    private DirectoryNode parent;
-    private String name;
-
-    private String fullPath;
+    private String text;
 
     public FileNode(DirectoryNode parent, String name) {
-        this.parent = parent;
-        this.name = name;
-
-        if ( parent != null )
-        {
-            fullPath = parent.getFullPath() + DEFAULT_SEPARATOR + name;
-        }
-        else
-        {
-            fullPath = name;
-        }
+        super( parent, name );
     }
 
     public FileNode(DirectoryNode parent, String name, String extension) {
-        this( parent, name + "." + extension );
+        super( parent, name, extension );
     }
 
     public FileNode(String name) {
-        this( (DirectoryNode) null, name );
+        super( name );
     }
 
     public FileNode(String name, String extension) {
-        this( null, name, extension );
+        super( name, extension );
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public DirectoryNode getParent() {
-        return parent;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getFullPath() {
-        return fullPath;
-    }
-
-    public boolean isDirectory() {
-        return false;
-    }
-
+    @Override
     public boolean isFile() {
         return true;
     }
 
+    @Override
+    public boolean isDirectory() {
+        return false;
+    }
+
+    @Override
+    public void toFormattedText(CodeBuilder codeBuilder) {
+        codeBuilder.appendLine( getName() );
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

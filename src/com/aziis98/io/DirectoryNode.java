@@ -1,37 +1,51 @@
 package com.aziis98.io;
 
+import com.aziis98.strings.*;
+
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
-public class DirectoryNode extends FileNode {
+public class DirectoryNode extends AbstractNode {
 
-    private LinkedList<FileNode> children = new LinkedList<>();
+    private Set<AbstractNode> children = new HashSet<>();
 
-    public DirectoryNode(String name) {
-        super( name );
+    public DirectoryNode(DirectoryNode parent, String name) {
+        super( parent, name );
     }
 
-    public void add(FileNode fileNode) {
-        children.add( fileNode );
+    public void add(AbstractNode abstractNode) {
+        System.out.println(toString() + " += " + abstractNode);
+        if ( !children.contains( abstractNode ) ) {
+            children.add( abstractNode );
+            System.out.println("  done");
+        }
     }
 
-    public void remove(FileNode fileNode) {
-        children.remove( fileNode );
+    public void remove(AbstractNode abstractNode) {
+        children.remove( abstractNode );
     }
 
-    public LinkedList<FileNode> getChildren() {
+    public Set<AbstractNode> getChildren() {
         return children;
     }
 
-    public void walkTree(Consumer<FileNode> action) {
+    public AbstractNode get(String name) {
+        return children.stream()
+                .filter( abstractNode -> abstractNode.getName().equals( name ) )
+                .findFirst()
+                .orElse( null );
+    }
+
+    public void walkTree(Consumer<AbstractNode> action) {
         action.accept( this );
-        for (FileNode child : children)
+        for (AbstractNode child : children)
         {
-            if ( child instanceof DirectoryNode )
+            if ( child.isDirectory() )
             {
                 ((DirectoryNode) child).walkTree( action );
             }
-            else
+            else if ( child.isFile() )
             {
                 action.accept( child );
             }
@@ -47,4 +61,56 @@ public class DirectoryNode extends FileNode {
     public boolean isFile() {
         return false;
     }
+
+    @Override
+    public void toFormattedText(CodeBuilder codeBuilder) {
+        codeBuilder.appendLine( getName() + DEFAULT_SEPARATOR );
+        codeBuilder.indentPush();
+        {
+            children.forEach( abstractNode -> abstractNode.toFormattedText( codeBuilder ) );
+        }
+        codeBuilder.indentPop();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + children.stream().map( AbstractNode::getName ).collect( Collectors.joining(", ", "[", "]") );
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

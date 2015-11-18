@@ -74,4 +74,8 @@ public class CodeBuilder {
 
         appendLine(line);
     }
+
+    public void setTabSequence(String tabSequence) {
+        this.tabSequence = tabSequence;
+    }
 }
