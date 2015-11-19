@@ -19,30 +19,42 @@ public class IO {
     public static AbstractNode generateFromPath(Path path) {
         DirectoryNode root;
 
+        String pathStr = path.toString();
         if ( isDirectory( path ) )
         {
-            root = new DirectoryNode( null, path.toString() );
+            root = new DirectoryNode( null, "[search-root]" );
         }
         else
         {
-            return new FileNode( path.toString() );
+            return new FileNode( pathStr );
         }
 
-        return walkFileTree( path, root );
+        AbstractNode result = walkFileTree( pathStr, root ).getChildren().stream().findAny().get();
+        result.setParent( null );
+        return result;
     }
 
-    private static DirectoryNode walkFileTree(Path path, DirectoryNode root) {
+    private static DirectoryNode walkFileTree(String path, DirectoryNode root) {
         Set<Path> paths = new HashSet<>();
 
         try
         {
-            walk( path ).forEachOrdered( paths::add );
+            walk( Paths.get( path ) ).forEachOrdered( paths::add );
 
-            int startDepth = path.toString().lastIndexOf( '/' );
+            int startDepth = path.lastIndexOf( File.separator );
 
             for (Path subPath : paths)
             {
-                addTo( root, subPath );
+                if ( !subPath.toString().contains( File.separator ) ) continue;
+
+                if ( isRegularFile( subPath ) )
+                {
+                    root.addDeepFile( subPath.toString() );
+                }
+                else if ( isDirectory( subPath ) )
+                {
+                    root.addDeepDirectory( subPath.toString() );
+                }
             }
 
         }
@@ -52,37 +64,6 @@ public class IO {
         }
 
         return root;
-    }
-
-    public static void addTo(DirectoryNode root, Path path) {
-        // src\com\aziis98\strings\StringMatch.java
-        // src\com\aziis98
-
-        if ( isDirectory( path ) )
-        {
-            String[] pathPieces = path.toString().split( "[/\\\\]" );
-            DirectoryNode buff = root;
-            for (String pathPiece : pathPieces)
-            {
-                if ( pathPiece.equals( buff.getName() ) )
-                    continue;
-
-                AbstractNode folder = buff.get( pathPiece );
-
-                if ( folder != null )
-                {
-                    folder.asDirectory().add( buff = new DirectoryNode( buff, pathPiece ) );
-                }
-                else
-                {
-                    buff.add( buff = new DirectoryNode( buff, pathPiece ) );
-                }
-            }
-        }
-        else if ( isRegularFile( path ) )
-        {
-
-        }
     }
 
 }

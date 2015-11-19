@@ -1,10 +1,15 @@
 package com.aziis98.io;
 
 import com.aziis98.strings.*;
+import com.aziis98.util.*;
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.stream.*;
 
 public class FileNode extends AbstractNode {
 
-    private String text;
+    String textBuffer;
 
     public FileNode(DirectoryNode parent, String name) {
         super( parent, name );
@@ -22,13 +27,48 @@ public class FileNode extends AbstractNode {
         super( name, extension );
     }
 
+
     public String getText() {
-        return text;
+        try
+        {
+            return Files.lines( Paths.get( fullPath ) ).collect( Collectors.joining("\n") );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public boolean setText(String text) {
+        try
+        {
+            Files.write( Paths.get( fullPath ), text.getBytes());
+            return true;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
+
+    public String getTextBuffer() {
+        return textBuffer;
+    }
+
+    public void setTextBuffer(String textBuffer) {
+        this.textBuffer = textBuffer;
+    }
+
+    public boolean writeTextBuffer() {
+        return setText( textBuffer );
+    }
+
+    public String readToTextBuffer() {
+        return textBuffer = getText();
+    }
+
 
     @Override
     public boolean isFile() {
@@ -43,5 +83,16 @@ public class FileNode extends AbstractNode {
     @Override
     public void toFormattedText(CodeBuilder codeBuilder) {
         codeBuilder.appendLine( getName() );
+    }
+
+
+    @Override
+    protected TreeNode<String> asTreeStructure(TreeNode<String> parent) {
+        TreeNode<String> thisFile = new TreeNode<>( parent, name );
+
+        thisFile.add( "type", "file" );
+        thisFile.add( "content", getText().replace( "\n", "<br>" ) );
+
+        return thisFile;
     }
 }

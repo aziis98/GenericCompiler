@@ -2,15 +2,17 @@ package com.aziis98.io;
 
 import com.aziis98.compiler.*;
 import com.aziis98.strings.*;
+import com.aziis98.util.*;
+
+import java.io.*;
+import java.nio.file.*;
 
 public abstract class AbstractNode implements IFormattable {
 
-    public static String DEFAULT_SEPARATOR = "/";
+    DirectoryNode parent;
+    String name;
 
-    private DirectoryNode parent;
-    private String name;
-
-    private String fullPath;
+    String fullPath;
 
     public AbstractNode(DirectoryNode parent, String name) {
         this.parent = parent;
@@ -18,7 +20,7 @@ public abstract class AbstractNode implements IFormattable {
 
         if ( parent != null )
         {
-            fullPath = parent.getFullPath() + DEFAULT_SEPARATOR + name;
+            fullPath = parent.getFullPath() + File.separator + name;
         }
         else
         {
@@ -46,6 +48,24 @@ public abstract class AbstractNode implements IFormattable {
         return parent;
     }
 
+    public void setParent(DirectoryNode parent) {
+        this.parent = parent;
+        System.out.println( "\nstart - fullPath = " + fullPath );
+        recalculateFullPath();
+        System.out.println( "end   - fullPath = " + fullPath );
+    }
+
+    protected void recalculateFullPath() {
+        if ( parent == null )
+        {
+            this.fullPath = this.name;
+        }
+        else
+        {
+            this.fullPath = parent.getFullPath() + File.separator + this.name;
+        }
+    }
+
     public String getFullPath() {
         return fullPath;
     }
@@ -68,10 +88,21 @@ public abstract class AbstractNode implements IFormattable {
         return (FileNode) this;
     }
 
+    public Path asPath() {
+        return Paths.get( fullPath );
+    }
+
+    public TreeNode<String> asTreeStructure() {
+        return asTreeStructure( null );
+    }
+
+    protected abstract TreeNode<String> asTreeStructure(TreeNode<String> parent);
+
 
     @Override
     public String toFormattedText() {
         CodeBuilder codeBuilder = new CodeBuilder();
+        codeBuilder.setTabSequence( "  " );
         toFormattedText( codeBuilder );
         return codeBuilder.toFormattedText();
     }
