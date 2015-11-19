@@ -8,6 +8,22 @@ import static java.nio.file.Files.*;
 
 public class IO {
 
+    public static DirectoryNode fromGenericPath(String path) {
+        int i = path.indexOf( File.separator );
+        if ( i == -1 )
+        {
+            return new DirectoryNode( null, path );
+        }
+        else
+        {
+            DirectoryNode directoryNode = new DirectoryNode( null, path.substring( 0, i ) );
+
+            directoryNode.addDeepDirectory( path.substring( i + 1 ) );
+
+            return directoryNode;
+        }
+    }
+
     public static AbstractNode generateFromFile(File file) {
         return generateFromPath( file.toPath() );
     }

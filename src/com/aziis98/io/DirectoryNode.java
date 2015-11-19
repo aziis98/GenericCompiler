@@ -142,7 +142,6 @@ public class DirectoryNode extends AbstractNode {
     @Override
     protected TreeNode<String> asTreeStructure(TreeNode<String> parent) {
         TreeNode<String> thisDirectory = new TreeNode<>( parent, name );
-        thisDirectory.add( "type", "directory" );
 
         for (AbstractNode abstractNode : children.values())
         {
@@ -150,6 +149,16 @@ public class DirectoryNode extends AbstractNode {
         }
 
         return thisDirectory;
+    }
+
+    @Override
+    public Iterator<AbstractNode> iterator() {
+        LinkedList<AbstractNode> list = new LinkedList<>();
+
+        list.add( this );
+        list.addAll( children.values() );
+
+        return list.iterator();
     }
 }
 
