@@ -7,7 +7,7 @@ import com.aziis98.util.*;
 import java.io.*;
 import java.nio.file.*;
 
-public abstract class AbstractNode implements IFormattable, Iterable<AbstractNode> {
+public abstract class AbstractNode implements IFormattable {
 
     DirectoryNode parent;
     String name;
@@ -70,6 +70,17 @@ public abstract class AbstractNode implements IFormattable, Iterable<AbstractNod
 
     public String getFullPath() {
         return fullPath;
+    }
+
+    public AbstractNode getRoot() {
+        if ( parent == null )
+        {
+            return this;
+        }
+        else
+        {
+            return this.parent.getRoot();
+        }
     }
 
 

@@ -12,19 +12,11 @@ public class Test1Lang extends AbstractLanguage {
     @Override
     public void compile(DirectoryNode projectStructure, DirectoryNode compiledStructure) {
 
-        System.out.println("Bla");
+        System.out.println(projectStructure.toFormattedText());
 
-        for (AbstractNode abstractNode : projectStructure.getChildren())
-        {
-            abstractNode.forEach( node -> {
-                if ( node.getName().equals("src") )
-                {
-                    node.setName("out");
-                }
-            });
+        compiledStructure.retriveFile( "text.txt" );
 
-            compiledStructure.addNode( abstractNode );
-        }
+        System.out.println(compiledStructure.toFormattedText());
 
     }
 }

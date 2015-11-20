@@ -5,7 +5,6 @@ import com.aziis98.util.*;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
 import java.util.stream.*;
 
 public class FileNode extends AbstractNode {
@@ -92,8 +91,4 @@ public class FileNode extends AbstractNode {
         return new TreeNode<>( parent, name, getText().replace( "\n", "<br>" ) );
     }
 
-    @Override
-    public Iterator<AbstractNode> iterator() {
-        return Collections.singleton( (AbstractNode) this ).iterator();
-    }
 }

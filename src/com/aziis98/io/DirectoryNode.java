@@ -8,9 +8,9 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-public class DirectoryNode extends AbstractNode {
+public class DirectoryNode extends AbstractNode implements Iterable<AbstractNode> {
 
-    private HashMap<String, AbstractNode> children = new HashMap<>();
+    protected HashMap<String, AbstractNode> children = new HashMap<>();
 
     public DirectoryNode(DirectoryNode parent, String name) {
         super( parent, name );
@@ -20,14 +20,14 @@ public class DirectoryNode extends AbstractNode {
         int i1 = path.indexOf( File.separator );
         if ( i1 == -1 )
         {
-            addDirectory( path );
+            retriveDirectory( path );
         }
         else
         {
             String thisName      = path.substring( 0, i1 );
             String remainingPath = path.substring( i1 + 1 );
 
-            addDirectory(thisName).addDeepDirectory( remainingPath );
+            retriveDirectory(thisName).addDeepDirectory( remainingPath );
         }
     }
 
@@ -42,9 +42,23 @@ public class DirectoryNode extends AbstractNode {
             String thisName = path.substring( 0, i1 );
             String remainingPath = path.substring( i1 + 1 );
 
-            addDirectory( thisName ).addDeepFile( remainingPath );
+            retriveDirectory( thisName ).addDeepFile( remainingPath );
         }
     }
+
+
+    public AbstractNode getDeep(String path) {
+        if ( !path.contains( File.separator ) )
+        {
+            return getNode( path );
+        }
+        else
+        {
+            return retriveDirectory( IO.getPathFist( path ) ).getDeep( IO.getPathTail( path ) );
+        }
+    }
+
+
 
     public void addNode(AbstractNode abstractNode) {
         children.putIfAbsent( abstractNode.getName(), abstractNode );
@@ -74,7 +88,7 @@ public class DirectoryNode extends AbstractNode {
         return children.get( name );
     }
 
-    public FileNode addFile(String name) {
+    public FileNode retriveFile(String name) {
         if ( !contains( name ) )
         {
             addNode( new FileNode( this, name ) );
@@ -82,7 +96,7 @@ public class DirectoryNode extends AbstractNode {
         return getNode( name ).asFile();
     }
 
-    public DirectoryNode addDirectory(String name) {
+    public DirectoryNode retriveDirectory(String name) {
         if ( !contains( name ) )
         {
             addNode( new DirectoryNode( this, name ) );
