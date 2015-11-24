@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="GenericCompiler">
+    <output-path>$PROJECT_DIR$/out/artifacts/GenericCompiler</output-path>
+    <root id="archive" name="GenericCompiler.jar">
+      <element id="module-output" name="GenericCompiler" />
+    </root>
+  </artifact>
+</component>

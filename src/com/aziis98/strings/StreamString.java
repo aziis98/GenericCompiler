@@ -1,5 +1,8 @@
 package com.aziis98.strings;
 
+import java.util.*;
+import java.util.regex.*;
+
 public class StreamString {
 
     public String string;
@@ -31,5 +34,23 @@ public class StreamString {
     @Override
     public String toString() {
         return string;
+    }
+
+
+    public static LinkedList<MatchResult> findAll(String string, String pattern) {
+        return findAll( string, Pattern.compile( pattern ) );
+    }
+
+    public static LinkedList<MatchResult> findAll(String string, Pattern pattern) {
+        Matcher matcher = pattern.matcher( string );
+
+        LinkedList<MatchResult> finds = new LinkedList<>();
+
+        while ( matcher.find() )
+        {
+            finds.add( matcher.toMatchResult() );
+        }
+
+        return finds;
     }
 }

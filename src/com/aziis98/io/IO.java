@@ -2,6 +2,7 @@ package com.aziis98.io;
 
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.*;
 import java.util.*;
 
 import static java.nio.file.Files.*;
@@ -50,6 +51,7 @@ public class IO {
         return walkFileTree( pathStr, directoryNode );
     }
 
+
     private static DirectoryNode walkFileTree(String path, DirectoryNode root) {
         Set<Path> paths = new HashSet<>();
 
@@ -82,6 +84,32 @@ public class IO {
         return root;
     }
 
+    public static void deleteRecursivly(Path path) {
+        if ( !Files.exists( path ) ) return;
+
+        try
+        {
+            Files.walkFileTree( path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete( file );
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete( dir );
+                    return FileVisitResult.CONTINUE;
+                }
+
+            } );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     public static DirectoryNode createFromPath(String path) {
         DirectoryNode root = new DirectoryNode( null, getPathHead( path ) );
@@ -90,7 +118,9 @@ public class IO {
     }
 
 
-    // a/b/c = a
+    /**
+     * a/b/c = a
+     */
     public static String getPathFist(String path) {
         int i = path.indexOf( File.separator );
         if ( i == -1 )
@@ -103,7 +133,9 @@ public class IO {
         }
     }
 
-    // a/b/c = c
+    /**
+     * a/b/c = c
+     */
     public static String getPathLast(String path) {
         int i = path.lastIndexOf( File.separator );
         if ( i == -1 )
@@ -116,7 +148,9 @@ public class IO {
         }
     }
 
-    // a/b/c = a/b
+    /**
+     * a/b/c = a/b
+     */
     public static String getPathHead(String path) {
         int i = path.lastIndexOf( File.separator );
         if ( i == -1 )
@@ -129,7 +163,9 @@ public class IO {
         }
     }
 
-    // a/b/c = b/c
+    /**
+     *  a/b/c = b/c
+     */
     public static String getPathTail(String path) {
         int i = path.indexOf( File.separator );
         if ( i == -1 )

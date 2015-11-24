@@ -16,6 +16,11 @@ public class DirectoryNode extends AbstractNode implements Iterable<AbstractNode
         super( parent, name );
     }
 
+    public void set(DirectoryNode otherTree) {
+        children = new HashMap<>(otherTree.children);
+        children.values().forEach( node -> node.setParent( this ) );
+    }
+
     public void addDeepDirectory(String path) {
         int i1 = path.indexOf( File.separator );
         if ( i1 == -1 )

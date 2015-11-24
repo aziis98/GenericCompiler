@@ -28,7 +28,7 @@ public class FileNode extends AbstractNode {
     }
 
 
-    public String getText() {
+    public String readText() {
         try
         {
             return Files.lines( Paths.get( fullPath ) ).collect( Collectors.joining("\n") );
@@ -40,10 +40,11 @@ public class FileNode extends AbstractNode {
         return null;
     }
 
-    public boolean setText(String text) {
+    public boolean writeText(String text) {
         try
         {
-            Files.write( Paths.get( fullPath ), text.getBytes());
+            Files.createDirectories( Paths.get( IO.getPathHead( getFullPath() ) ) );
+            Files.write( asPath(), text.getBytes());
             return true;
         }
         catch (IOException e)
@@ -62,11 +63,11 @@ public class FileNode extends AbstractNode {
     }
 
     public boolean writeTextBuffer() {
-        return setText( textBuffer );
+        return writeText( textBuffer );
     }
 
     public String readToTextBuffer() {
-        return textBuffer = getText();
+        return textBuffer = readText();
     }
 
 
@@ -88,7 +89,7 @@ public class FileNode extends AbstractNode {
 
     @Override
     protected TreeNode<String> asTreeStructure(TreeNode<String> parent) {
-        return new TreeNode<>( parent, name, getText().replace( "\n", "<br>" ) );
+        return new TreeNode<>( parent, name, readText().replace( "\n", "<br>" ) );
     }
 
 }
