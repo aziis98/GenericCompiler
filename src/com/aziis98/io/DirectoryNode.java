@@ -111,7 +111,9 @@ public class DirectoryNode extends AbstractNode implements Iterable<AbstractNode
 
     public void walkTree(Consumer<AbstractNode> action) {
         action.accept( this );
-        for (AbstractNode child : children.values())
+        LinkedList<AbstractNode> values = new LinkedList<>(children.values());
+        values.sort( Comparator.comparing( AbstractNode::isDirectory ) );
+        for (AbstractNode child : values)
         {
             if ( child.isDirectory() )
             {
