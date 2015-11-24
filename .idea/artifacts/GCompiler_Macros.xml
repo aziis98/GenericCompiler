@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="GCompiler-Macros:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/GCompiler_Macros_jar</output-path>
+  <artifact type="jar" build-on-make="true" name="GCompiler-Macros">
+    <output-path>$PROJECT_DIR$/out/artifacts/GCompiler_Macros</output-path>
     <root id="archive" name="GCompiler-Macros.jar">
       <element id="module-output" name="GCompiler-Macros" />
       <element id="module-output" name="GenericCompiler" />

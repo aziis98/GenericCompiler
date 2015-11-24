@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GCompiler-Macros/GCompiler-Macros.iml" filepath="$PROJECT_DIR$/GCompiler-Macros/GCompiler-Macros.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GCompiler-Testing/GCompiler-Testing.iml" filepath="$PROJECT_DIR$/GCompiler-Testing/GCompiler-Testing.iml" />
       <module fileurl="file://$PROJECT_DIR$/GenericCompiler.iml" filepath="$PROJECT_DIR$/GenericCompiler.iml" />
     </modules>
   </component>
